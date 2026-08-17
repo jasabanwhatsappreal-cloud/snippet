@@ -47,11 +47,20 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     locale: "id_ID",
     type: "website",
+    images: [
+      {
+        url: "/thumbnail.jpeg",
+        width: 1600,
+        height: 901,
+        alt: siteConfig.name,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
+    images: ["/thumbnail.jpeg"],
   },
   robots: {
     index: true,

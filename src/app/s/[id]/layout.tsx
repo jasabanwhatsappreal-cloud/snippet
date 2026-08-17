@@ -41,12 +41,21 @@ export async function generateMetadata({
           tags: snippet.tags,
           publishedTime: snippet.createdAt,
           modifiedTime: snippet.updatedAt,
+          images: [
+            {
+              url: "/thumbnail.jpeg",
+              width: 1600,
+              height: 901,
+              alt: snippet.title,
+            },
+          ],
         },
         twitter: {
           card: "summary_large_image",
           title: `${snippet.title} — ${siteConfig.name}`,
           description:
             snippet.description || `Code snippet in ${snippet.language}`,
+          images: ["/thumbnail.jpeg"],
         },
         alternates: {
           canonical: `${siteConfig.url}/s/${id}`,
@@ -67,11 +76,20 @@ export async function generateMetadata({
       siteName: siteConfig.name,
       locale: "id_ID",
       type: "website",
+      images: [
+        {
+          url: "/thumbnail.jpeg",
+          width: 1600,
+          height: 901,
+          alt: siteConfig.name,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: `${siteConfig.name} — ${siteConfig.tagline}`,
       description: siteConfig.description,
+      images: ["/thumbnail.jpeg"],
     },
     alternates: {
       canonical: `${siteConfig.url}/s/${id}`,
