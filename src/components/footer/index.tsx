@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Code2, MessageCircle } from "lucide-react";
 import { siteConfig } from "@/config/site";
-
 export function Footer() {
   return (
     <footer className="border-t border-border bg-surface/50">
@@ -49,6 +48,12 @@ export function Footer() {
                 >
                   GitHub
                 </a>
+                <Link
+                  href="/request"
+                  className="block text-sm text-muted hover:text-text transition-colors"
+                >
+                  Request Snippet
+                </Link>
                 <a
                   href={siteConfig.whatsappChannel}
                   target="_blank"

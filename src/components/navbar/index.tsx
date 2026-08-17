@@ -10,6 +10,7 @@ import {
   Code2,
   FileCode,
   LayoutDashboard,
+  MessageSquarePlus,
 } from "lucide-react";
 
 export function Navbar() {
@@ -33,6 +34,7 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/snippets", label: "Snippets", icon: FileCode },
+    { href: "/request", label: "Request", icon: MessageSquarePlus },
     ...(isAdmin ? [{ href: "/create", label: "Create", icon: Plus }] : []),
   ];
 

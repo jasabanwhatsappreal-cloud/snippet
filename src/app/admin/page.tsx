@@ -8,16 +8,12 @@ import {
   FileCode,
   Eye,
   Heart,
-  LayoutDashboard,
   Plus,
-  Settings,
   LogOut,
   BarChart3,
 } from "lucide-react";
 import { SnippetCard } from "@/components/snippet/card";
 import { SnippetCardSkeleton } from "@/components/ui/skeleton";
-import { Modal } from "@/components/ui/modal";
-import { useToast } from "@/components/ui/toast";
 import type { Snippet } from "@/types/snippet";
 
 interface Stats {
@@ -29,7 +25,6 @@ interface Stats {
 
 export default function AdminDashboardPage() {
   const router = useRouter();
-  const { toast } = useToast();
   const [snippets, setSnippets] = useState<Snippet[]>([]);
   const [stats, setStats] = useState<Stats>({
     totalSnippets: 0,
@@ -107,6 +102,13 @@ export default function AdminDashboardPage() {
           <p className="text-sm text-muted mt-1">Manage your snippets</p>
         </div>
         <div className="flex items-center gap-2">
+          <Link
+            href="/admin/requests"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm text-muted hover:text-text hover:bg-surface-hover transition-colors"
+          >
+            <BarChart3 className="w-4 h-4" />
+            Requests
+          </Link>
           <Link
             href="/create"
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors"
