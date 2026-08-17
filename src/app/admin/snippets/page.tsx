@@ -7,7 +7,6 @@ import {
   Eye,
   Pencil,
   Trash2,
-  ExternalLink,
   Copy,
   Plus,
   ArrowLeft,
@@ -191,6 +190,13 @@ export default function AdminSnippetsPage() {
                         >
                           <Copy className="w-4 h-4" />
                         </button>
+                        <Link
+                          href={`/admin/edit/${snippet.id}`}
+                          className="p-1.5 rounded-lg text-muted hover:text-accent hover:bg-accent/10 transition-colors"
+                          title="Edit"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Link>
                         <button
                           onClick={() => setDeleteModal(snippet.id)}
                           className="p-1.5 rounded-lg text-muted hover:text-error hover:bg-error/10 transition-colors"
