@@ -158,11 +158,11 @@ export default function HomePage() {
           href={siteConfig.whatsappChannel}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-5 py-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 transition-colors"
+          className="group flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-5 py-4 rounded-xl border border-border bg-surface hover:border-border-light transition-colors"
         >
           <span className="flex items-center gap-3">
-            <span className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-500/15 shrink-0">
-              <MessageCircle className="w-5 h-5 text-emerald-400" />
+            <span className="flex items-center justify-center w-10 h-10 rounded-full bg-accent/10 shrink-0">
+              <MessageCircle className="w-5 h-5 text-accent" />
             </span>
             <span className="flex flex-col">
               <span className="text-sm font-semibold text-text">
@@ -173,7 +173,7 @@ export default function HomePage() {
               </span>
             </span>
           </span>
-          <span className="sm:ml-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-medium group-hover:bg-emerald-400 transition-colors">
+          <span className="sm:ml-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent-hover transition-colors">
             Gabung Sekarang
             <ArrowRight className="w-4 h-4" />
           </span>

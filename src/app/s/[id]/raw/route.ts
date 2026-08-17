@@ -7,18 +7,37 @@ export async function GET(
   const { id } = await params;
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/snippets/${id}`
-    );
-    const data = await res.json();
+    const { getSnippet } = await import("@/lib/github/snippets");
+    const snippet = await getSnippet(id);
 
-    if (!data.success || !data.data) {
+    if (!snippet) {
       return new NextResponse("Not Found", { status: 404 });
     }
 
-    return new NextResponse(data.data.code, {
+    const ext =
+      {
+        javascript: "js",
+        typescript: "ts",
+        python: "py",
+        html: "html",
+        css: "css",
+        json: "json",
+        php: "php",
+        java: "java",
+        cpp: "cpp",
+        bash: "sh",
+        go: "go",
+        rust: "rs",
+        ruby: "rb",
+        sql: "sql",
+        yaml: "yaml",
+        markdown: "md",
+      }[snippet.language] || "txt";
+
+    return new NextResponse(snippet.code, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
+        "Content-Disposition": `inline; filename="${id}.${ext}"`,
         "Cache-Control": "public, max-age=60",
       },
     });
