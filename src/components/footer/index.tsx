@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Code2 } from "lucide-react";
+import { Code2, MessageCircle } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
 export function Footer() {
@@ -48,6 +48,15 @@ export function Footer() {
                   className="block text-sm text-muted hover:text-text transition-colors"
                 >
                   GitHub
+                </a>
+                <a
+                  href={siteConfig.whatsappChannel}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm text-muted hover:text-text transition-colors"
+                >
+                  <MessageCircle className="w-4 h-4 text-emerald-400" />
+                  WhatsApp Channel
                 </a>
               </div>
             </div>

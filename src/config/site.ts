@@ -6,6 +6,7 @@ export const siteConfig = {
   tagline: "Your code. Your snippets. One place.",
   subTagline: "Save, organize, and share your code snippets instantly.",
   github: "https://github.com/phrzy",
+  whatsappChannel: "https://whatsapp.com/channel/0029VbD1zGq6mYPUbtVh6U0L/121",
   languages: [
     "javascript",
     "typescript",

@@ -11,6 +11,7 @@ import {
   ArrowRight,
   Plus,
   Sparkles,
+  MessageCircle,
 } from "lucide-react";
 import { SnippetCard } from "@/components/snippet/card";
 import { SnippetCardSkeleton } from "@/components/ui/skeleton";
@@ -150,6 +151,33 @@ export default function HomePage() {
             </button>
           </div>
         </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-8">
+        <a
+          href={siteConfig.whatsappChannel}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-5 py-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 transition-colors"
+        >
+          <span className="flex items-center gap-3">
+            <span className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-500/15 shrink-0">
+              <MessageCircle className="w-5 h-5 text-emerald-400" />
+            </span>
+            <span className="flex flex-col">
+              <span className="text-sm font-semibold text-text">
+                Ikuti Channel WhatsApp Kami
+              </span>
+              <span className="text-xs text-muted">
+                Dapatkan update snippet &amp; tips coding terbaru
+              </span>
+            </span>
+          </span>
+          <span className="sm:ml-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-medium group-hover:bg-emerald-400 transition-colors">
+            Gabung Sekarang
+            <ArrowRight className="w-4 h-4" />
+          </span>
+        </a>
       </section>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-16">

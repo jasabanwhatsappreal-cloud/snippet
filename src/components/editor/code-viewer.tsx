@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Copy, Check, WrapText, AlignLeft } from "lucide-react";
+import { Copy, Check, WrapText, AlignLeft, X, FileCode2 } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
-import { copyToClipboard } from "@/lib/utils/utils";
+import { copyToClipboard, getLanguageColor } from "@/lib/utils/utils";
 
 interface CodeViewerProps {
   code: string;
@@ -18,14 +18,15 @@ export function CodeViewer({ code, language }: CodeViewerProps) {
 
   const rawLines = code.split("\n");
   const lineCount = codeLines.length || rawLines.length;
+  const langColor = getLanguageColor(language);
 
-  // Syntax highlight
+  // Syntax highlight (VS Code Dark+ theme)
   useEffect(() => {
     let dead = false;
     (async () => {
       try {
         const { codeToHtml } = await import("shiki");
-        const html = await codeToHtml(code, { lang: language, theme: "github-dark" });
+        const html = await codeToHtml(code, { lang: language, theme: "dark-plus" });
         if (dead) return;
         const tmp = document.createElement("div");
         tmp.innerHTML = html;
@@ -63,62 +64,71 @@ export function CodeViewer({ code, language }: CodeViewerProps) {
   }, [codeLines, rawLines]);
 
   return (
-    <div className="rounded-xl border border-border overflow-hidden bg-[#0d1117]">
-      {/* -------- HEADER -------- */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-surface/80">
-        <div className="flex items-center gap-3">
-          <div className="flex gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
-            <span className="w-3 h-3 rounded-full bg-[#febc2e]" />
-            <span className="w-3 h-3 rounded-full bg-[#28c840]" />
+    <div className="rounded-lg border border-[#2b2b2b] overflow-hidden bg-[#1e1e1e]">
+      {/* -------- TAB BAR -------- */}
+      <div className="flex items-center justify-between bg-[#252526] border-b border-[#1e1e1e]">
+        <div className="flex items-stretch">
+          <div className="flex items-center gap-2 px-4 h-10 bg-[#1e1e1e] text-[#cccccc] border-r border-[#252526] select-none">
+            <span
+              className="w-2.5 h-2.5 rounded-[3px] shrink-0"
+              style={{ backgroundColor: langColor }}
+            />
+            <FileCode2 className="w-3.5 h-3.5 text-[#858585]" />
+            <span className="text-[13px] font-normal">{language}</span>
+            <span className="text-[11px] text-[#6e6e6e] ml-1">{lineCount}L</span>
+            <span className="ml-2 text-[#6e6e6e] hover:text-[#cccccc] transition-colors cursor-default">
+              <X className="w-3.5 h-3.5" />
+            </span>
           </div>
-          <span className="text-xs text-muted uppercase font-medium tracking-wider">
-            {language}
-          </span>
-          <span className="text-[10px] text-muted/50 font-mono">
-            {lineCount}L
-          </span>
         </div>
 
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-1 pr-2">
           <button
             onClick={() => setWordWrap((v) => !v)}
-            className="p-1.5 rounded-lg text-muted hover:text-text hover:bg-surface-hover transition-colors"
+            className={`p-1.5 rounded text-[#cccccc] hover:bg-[#2a2d2e] transition-colors ${
+              wordWrap ? "bg-[#37373d] text-white" : ""
+            }`}
             title={wordWrap ? "No wrap" : "Word wrap"}
           >
             {wordWrap ? <WrapText className="w-4 h-4" /> : <AlignLeft className="w-4 h-4" />}
           </button>
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs text-muted hover:text-text hover:bg-surface-hover transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs text-[#cccccc] hover:bg-[#2a2d2e] transition-colors"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? (
+              <Check className="w-3.5 h-3.5 text-[#89d185]" />
+            ) : (
+              <Copy className="w-3.5 h-3.5" />
+            )}
             {copied ? "Copied!" : "Copy"}
           </button>
         </div>
       </div>
 
       {/* -------- CODE -------- */}
-      <div
-        className="overflow-auto max-h-[70vh]"
-        style={wordWrap ? { whiteSpace: "pre-wrap" } : undefined}
-      >
+      <div className="code-scroll overflow-auto max-h-[70vh]">
         {codeRows.length > 0 ? (
           <table
-            className="w-full border-collapse"
-            style={{ fontFamily: "var(--font-geist-mono), monospace", fontSize: "13px", lineHeight: "1.65" }}
+            className="w-full border-collapse code-viewer"
+            style={{
+              fontFamily: "'JetBrains Mono', 'Fira Code', Consolas, monospace",
+              fontSize: "13px",
+              lineHeight: "1.6",
+            }}
           >
             <tbody>
               {codeRows.map((row) => (
                 <tr key={row.num} className="group">
                   <td
-                    className="sticky left-0 z-10 select-none text-right text-muted/25 group-hover:text-muted/50 bg-[#0d1117] border-r border-border/30 px-4 py-0 align-top whitespace-nowrap transition-colors"
-                    style={{ width: "1%", minWidth: "3rem" }}
+                    className="sticky left-0 z-10 select-none text-right text-[#858585] group-hover:text-[#c6c6c6] bg-[#1e1e1e] group-hover:bg-[#282828] pl-4 pr-2 py-0 align-top whitespace-nowrap transition-colors tabular-nums"
+                    style={{ width: "1%", minWidth: "3.5rem", fontSize: "12px" }}
                   >
                     {row.num}
                   </td>
                   <td
-                    className="px-4 py-0 align-top whitespace-pre code-viewer"
+                    className="pl-2 pr-4 py-0 align-top group-hover:bg-[#282828]"
+                    style={{ whiteSpace: wordWrap ? "pre-wrap" : "pre" }}
                     dangerouslySetInnerHTML={{ __html: row.html || "&nbsp;" }}
                   />
                 </tr>
@@ -126,9 +136,9 @@ export function CodeViewer({ code, language }: CodeViewerProps) {
             </tbody>
           </table>
         ) : (
-          <div className="flex items-center justify-center py-16">
-            <span className="inline-block w-4 h-4 border-2 border-accent/30 border-t-accent rounded-full animate-spin mr-3" />
-            <span className="text-sm text-muted">Loading...</span>
+          <div className="flex items-center justify-center py-16 text-[#6e6e6e]">
+            <span className="inline-block w-4 h-4 border-2 border-[#264f78] border-t-[#89d185] rounded-full animate-spin mr-3" />
+            <span className="text-sm">Loading...</span>
           </div>
         )}
       </div>
