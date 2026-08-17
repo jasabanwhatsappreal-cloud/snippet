@@ -97,10 +97,64 @@ export async function generateMetadata({
   };
 }
 
-export default function SnippetLayout({
+export default async function SnippetLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ id: string }>;
 }) {
-  return <>{children}</>;
+  const { id } = await params;
+
+  let title = "";
+  let description = "";
+  let language = "";
+  let author = "Anonymous";
+  let createdAt = "";
+  let updatedAt = "";
+  let tags: string[] = [];
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/snippets/${id}`,
+      { next: { revalidate: 60 } }
+    );
+    const data = await res.json();
+    if (data.success && data.data) {
+      title = data.data.title;
+      description = data.data.description || "";
+      language = data.data.language;
+      author = data.data.author || "Anonymous";
+      createdAt = data.data.createdAt;
+      updatedAt = data.data.updatedAt;
+      tags = data.data.tags || [];
+    }
+  } catch {
+    // fallback
+  }
+
+  return (
+    <>
+      {children}
+      {title && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareSourceCode",
+              name: title,
+              description: description || undefined,
+              programmingLanguage: language,
+              codeRepository: siteConfig.github,
+              author: { "@type": "Person", name: author },
+              dateCreated: createdAt,
+              dateModified: updatedAt,
+              keywords: tags,
+            }),
+          }}
+        />
+      )}
+    </>
+  );
 }

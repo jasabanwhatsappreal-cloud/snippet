@@ -96,6 +96,40 @@ export default function RootLayout({
           <main className="flex-1 pt-16">{children}</main>
           <Footer />
         </ToastProvider>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  "@id": `${siteConfig.url}/#website`,
+                  url: siteConfig.url,
+                  name: siteConfig.name,
+                  alternateName: siteConfig.shortName,
+                  description: siteConfig.description,
+                  inLanguage: "id",
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: {
+                      "@type": "EntryPoint",
+                      urlTemplate: `${siteConfig.url}/snippets?search={search_term_string}`,
+                    },
+                    "query-input": "required name=search_term_string",
+                  },
+                },
+                {
+                  "@type": "Organization",
+                  "@id": `${siteConfig.url}/#organization`,
+                  name: siteConfig.name,
+                  url: siteConfig.url,
+                  logo: `${siteConfig.url}/thumbnail.jpeg`,
+                },
+              ],
+            }),
+          }}
+        />
       </body>
     </html>
   );

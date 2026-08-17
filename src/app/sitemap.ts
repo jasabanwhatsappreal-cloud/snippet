@@ -1,8 +1,10 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+export const dynamic = "force-dynamic";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const base: MetadataRoute.Sitemap = [
     {
       url: siteConfig.url,
       lastModified: new Date(),
@@ -22,4 +24,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
   ];
+
+  try {
+    const { getAllSnippets } = await import("@/lib/github/snippets");
+    const snippets = await getAllSnippets();
+    const publicSnippets = snippets.filter((s) => s.visibility === "public");
+
+    const snippetUrls: MetadataRoute.Sitemap = publicSnippets.map((s) => ({
+      url: `${siteConfig.url}/s/${s.id}`,
+      lastModified: new Date(s.updatedAt),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    }));
+
+    return [...base, ...snippetUrls];
+  } catch {
+    return base;
+  }
 }
