@@ -1,0 +1,18 @@
+{
+  "id": "xTCIYg",
+  "title": "aio",
+  "description": "",
+  "language": "javascript",
+  "code": "/*\n * [ savethevideo downloader & converter ]\n * creator : Rinn\n * base    : https://www.savethevideo.com/\n * channel : https://whatsapp.com/channel/0029VbD1zGq6mYPUbtVh6U0L\n */\n\n/*\n * support : Facebook, Twitter, Instagram, Freesound, Reddit, Tumblr, 9GAG, Archive.org, Digg, Einthusan.tv, Flickr, Howcast, Imgur, Khan Academy, Kickstarter, Linkedin, MSN, Myspace, Odnoklassniki, Porntube, Redtube, Steam, Tiktok, Vimeo, Vine, XNXX, XTube, XVideos, Yahoo, YouJizz, YouPorn, ZDNet, eHow, Dailymotion\n * format video : mp4, webm, avi, mov, mkv, flv\n * format audio : best, mp3, m4a, aac, flac, wav, opus, vorbis\n * quality cbr  : 320, 256, 192, 128, 96, 64, 32\n * quality vbr  : 0, 1, 2, 3, 4, 5, 6, 7, 8, 9\n */ \n\nconst headers = {\n  \"accept\": \"application/json\",\n  \"content-type\": \"application/json\",\n  \"origin\": \"https://www.savethevideo.com\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\"\n};\n\nasync function processTask(payload) {\n  let task = await fetch(\"https://api.v02.savethevideo.com/tasks\", {\n    method: \"POST\",\n    headers,\n    body: JSON.stringify(payload)\n  }).then(r => r.json());\n\n  while (task.state !== \"completed\") {\n    await new Promise(r => setTimeout(r, 1000));\n    task = await fetch(`https://api.v02.savethevideo.com/tasks/${task.id}`, { headers }).then(r => r.json());\n  }\n\n  console.log(JSON.stringify(task, null, 2));\n}\n\nfunction download(url) {\n  return processTask({ type: \"info\", url });\n}\n\nfunction convert(url, format, quality) {\n  const audioFormats = [\"mp3\", \"flac\", \"m4a\", \"aac\", \"opus\", \"vorbis\"];\n  let finalQuality = quality;\n\n  if (audioFormats.includes(format)) {\n    if (format === \"opus\" && Number(quality) < 10) {\n      finalQuality = \"128\";\n    }\n  } else {\n    finalQuality = undefined;\n  }\n\n  const payload = { type: \"convert\", url, format };\n  if (finalQuality) {\n    payload.quality = finalQuality;\n  }\n\n  return processTask(payload);\n}\n\nconst url = \"https://dai.ly/xakx21i\";\n\ndownload(url);\n\n/* convert(url, \"mp4\"); */\n/* convert(url, \"opus\", \"5\"); */\n/* convert(url, \"mp3\", \"0\"); */",
+  "author": "phrzy",
+  "tags": [
+    "scrape",
+    "website",
+    "javascript"
+  ],
+  "visibility": "public",
+  "createdAt": "2026-08-17T02:10:04.836Z",
+  "updatedAt": "2026-08-17T02:10:04.836Z",
+  "views": 0,
+  "likes": 0
+}
