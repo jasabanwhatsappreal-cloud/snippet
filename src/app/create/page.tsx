@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Code2, Plus, X } from "lucide-react";
+import { ArrowLeft, Code2, Plus, X, Lock } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
 export default function CreateSnippetPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -18,6 +19,39 @@ export default function CreateSnippetPage() {
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [visibility, setVisibility] = useState<"public" | "private">("public");
+
+  useEffect(() => {
+    fetch("/api/admin/check")
+      .then((r) => r.json())
+      .then((d) => setIsAdmin(d.isAdmin))
+      .catch(() => setIsAdmin(false));
+  }, []);
+
+  if (isAdmin === null) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-20 text-center">
+        <div className="w-6 h-6 border-2 border-accent/30 border-t-accent rounded-full animate-spin mx-auto" />
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-20 text-center">
+        <Lock className="w-12 h-12 text-muted mx-auto mb-4" />
+        <h1 className="text-2xl font-bold text-text mb-2">Access Restricted</h1>
+        <p className="text-sm text-muted mb-6">
+          Only admin can create snippets.
+        </p>
+        <button
+          onClick={() => router.push("/admin/login")}
+          className="px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors"
+        >
+          Admin Login
+        </button>
+      </div>
+    );
+  }
 
   const handleAddTag = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === ",") {

@@ -183,6 +183,26 @@ export async function incrementLikes(id: string): Promise<void> {
   }
 }
 
+export async function getPopularLanguages(
+  limit = 10
+): Promise<{ language: string; count: number }[]> {
+  const snippets = await getAllSnippets();
+  const publicSnippets = snippets.filter((s) => s.visibility === "public");
+
+  const countMap = publicSnippets.reduce(
+    (acc, s) => {
+      acc[s.language] = (acc[s.language] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
+  return Object.entries(countMap)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, limit)
+    .map(([language, count]) => ({ language, count }));
+}
+
 export async function getStats(): Promise<{
   totalSnippets: number;
   totalViews: number;

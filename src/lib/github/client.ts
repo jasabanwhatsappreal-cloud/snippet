@@ -40,7 +40,7 @@ export async function getFile(
   try {
     const res = await fetch(
       `${GITHUB_API}/repos/${owner}/${repo}/contents/${filePath}?ref=${branch}`,
-      { headers: getHeaders(), next: { revalidate: 60 } }
+      { headers: getHeaders(), cache: "no-store" }
     );
 
     if (res.status === 404) return null;
@@ -141,7 +141,7 @@ export async function listDirectory(
   try {
     const res = await fetch(
       `${GITHUB_API}/repos/${owner}/${repo}/contents/${dirPath}?ref=${branch}`,
-      { headers: getHeaders(), next: { revalidate: 30 } }
+      { headers: getHeaders(), cache: "no-store" }
     );
 
     if (!res.ok) return [];

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import {
-  Search,
   Plus,
   Menu,
   X,
@@ -16,6 +15,7 @@ import {
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -24,9 +24,16 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    fetch("/api/admin/check")
+      .then((r) => r.json())
+      .then((d) => setIsAdmin(d.isAdmin))
+      .catch(() => {});
+  }, []);
+
   const navLinks = [
     { href: "/snippets", label: "Snippets", icon: FileCode },
-    { href: "/create", label: "Create", icon: Plus },
+    ...(isAdmin ? [{ href: "/create", label: "Create", icon: Plus }] : []),
   ];
 
   return (
@@ -76,13 +83,15 @@ export function Navbar() {
             >
               <LayoutDashboard className="w-4 h-4" />
             </Link>
-            <Link
-              href="/create"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              New Snippet
-            </Link>
+            {isAdmin && (
+              <Link
+                href="/create"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                New Snippet
+              </Link>
+            )}
           </div>
 
           <button

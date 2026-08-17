@@ -27,7 +27,9 @@ export async function createSession(): Promise<void> {
 export async function validateSession(): Promise<boolean> {
   const cookieStore = await cookies();
   const session = cookieStore.get(COOKIE_NAME);
-  return !!session?.value;
+  if (!session?.value) return false;
+  if (session.value.length < 32) return false;
+  return true;
 }
 
 export async function destroySession(): Promise<void> {

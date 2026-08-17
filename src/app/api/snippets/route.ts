@@ -35,6 +35,15 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const { validateSession } = await import("@/lib/auth/auth");
+    const isAuth = await validateSession();
+    if (!isAuth) {
+      return NextResponse.json(
+        { success: false, error: "Only admin can create snippets" },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
 
     if (!body.title || !body.code || !body.language) {

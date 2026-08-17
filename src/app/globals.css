@@ -44,6 +44,27 @@ pre code {
   font-family: var(--font-mono), monospace;
 }
 
+.code-viewer pre {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.code-viewer pre code {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.code-viewer .line {
+  display: block;
+  padding: 0 1rem;
+  min-height: 1.65em;
+  white-space: pre;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }

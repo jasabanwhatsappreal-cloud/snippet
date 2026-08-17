@@ -28,6 +28,9 @@ interface Stats {
 
 export default function HomePage() {
   const [recentSnippets, setRecentSnippets] = useState<SnippetMeta[]>([]);
+  const [popularLanguages, setPopularLanguages] = useState<
+    { language: string; count: number }[]
+  >([]);
   const [stats, setStats] = useState<Stats>({
     totalSnippets: 0,
     totalViews: 0,
@@ -36,17 +39,20 @@ export default function HomePage() {
   });
   const [loading, setLoading] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [snippetsRes, statsRes] = await Promise.all([
+        const [snippetsRes, statsRes, languagesRes] = await Promise.all([
           fetch("/api/snippets?per_page=6&sort=newest"),
           fetch("/api/snippets?per_page=1"),
+          fetch("/api/languages?limit=10"),
         ]);
 
         const snippetsData = await snippetsRes.json();
         const statsData = await statsRes.json();
+        const languagesData = await languagesRes.json();
 
         if (snippetsData.success) {
           setRecentSnippets(snippetsData.data.snippets);
@@ -63,6 +69,10 @@ export default function HomePage() {
             totalSnippets: statsData.data.total,
           }));
         }
+
+        if (languagesData.success) {
+          setPopularLanguages(languagesData.data);
+        }
       } catch {
         // silent
       }
@@ -70,6 +80,11 @@ export default function HomePage() {
     }
 
     fetchData();
+
+    fetch("/api/admin/check")
+      .then((r) => r.json())
+      .then((d) => setIsAdmin(d.isAdmin))
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -105,13 +120,15 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
-              <Link
-                href="/create"
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-medium transition-colors"
-              >
-                <Plus className="w-5 h-5" />
-                Create Snippet
-              </Link>
+              {isAdmin && (
+                <Link
+                  href="/create"
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-medium transition-colors"
+                >
+                  <Plus className="w-5 h-5" />
+                  Create Snippet
+                </Link>
+              )}
               <Link
                 href="/snippets"
                 className="flex items-center gap-2 px-6 py-3 rounded-xl border border-border hover:border-border-light text-text font-medium transition-colors hover:bg-surface-hover"
@@ -185,15 +202,19 @@ export default function HomePage() {
               No snippets yet
             </h3>
             <p className="text-sm text-muted mb-4">
-              Be the first to create a snippet.
+              {isAdmin
+                ? "Be the first to create a snippet."
+                : "No snippets have been created yet."}
             </p>
-            <Link
-              href="/create"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              Create Snippet
-            </Link>
+            {isAdmin && (
+              <Link
+                href="/create"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                Create Snippet
+              </Link>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -206,23 +227,46 @@ export default function HomePage() {
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
         <h2 className="text-xl font-bold text-text mb-6">Popular Languages</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          {siteConfig.languages.map((lang) => (
-            <Link
-              key={lang}
-              href={`/snippets?language=${lang}`}
-              className="flex items-center gap-3 p-3 rounded-xl bg-surface border border-border hover:border-border-light hover:bg-surface-hover transition-all group"
-            >
-              <div
-                className="w-3 h-3 rounded-full shrink-0"
-                style={{ backgroundColor: getLanguageColor(lang) }}
-              />
-              <span className="text-sm font-medium text-muted group-hover:text-text transition-colors capitalize">
-                {lang}
-              </span>
-            </Link>
-          ))}
-        </div>
+        {popularLanguages.length === 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            {siteConfig.languages.map((lang) => (
+              <Link
+                key={lang}
+                href={`/snippets?language=${lang}`}
+                className="flex items-center gap-3 p-3 rounded-xl bg-surface border border-border hover:border-border-light hover:bg-surface-hover transition-all group"
+              >
+                <div
+                  className="w-3 h-3 rounded-full shrink-0"
+                  style={{ backgroundColor: getLanguageColor(lang) }}
+                />
+                <span className="text-sm font-medium text-muted group-hover:text-text transition-colors capitalize">
+                  {lang}
+                </span>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            {popularLanguages.map(({ language, count }) => (
+              <Link
+                key={language}
+                href={`/snippets?language=${language}`}
+                className="flex items-center gap-3 p-3 rounded-xl bg-surface border border-border hover:border-border-light hover:bg-surface-hover transition-all group"
+              >
+                <div
+                  className="w-3 h-3 rounded-full shrink-0"
+                  style={{ backgroundColor: getLanguageColor(language) }}
+                />
+                <span className="text-sm font-medium text-muted group-hover:text-text transition-colors capitalize">
+                  {language}
+                </span>
+                <span className="ml-auto text-xs text-muted/60 group-hover:text-muted transition-colors">
+                  {count}
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
     </>
   );
