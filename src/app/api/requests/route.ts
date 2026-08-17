@@ -67,6 +67,9 @@ export async function POST(request: Request) {
       );
     }
 
+    const { notifyNewRequest } = await import("@/lib/notifications/telegram");
+    notifyNewRequest(created).catch(() => {});
+
     return NextResponse.json({ success: true, data: created }, { status: 201 });
   } catch {
     return NextResponse.json(
