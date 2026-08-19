@@ -17,36 +17,43 @@ export async function generateMetadata({
 
     if (data.success && data.data) {
       const snippet = data.data;
+      const title = snippet.title?.trim() || "Untitled Snippet";
+      const description =
+        snippet.description?.trim() || "Developer code snippet shared on Phrzy.";
+      const author = snippet.author?.trim() || "Phrzy";
+      const tags = Array.isArray(snippet.tags) ? snippet.tags : [];
+      const ogImage = `${siteConfig.url}/api/og/${id}`;
       return {
-        title: snippet.title,
-        description:
-          snippet.description || `Code snippet in ${snippet.language}`,
-        keywords: [
-          snippet.title,
-          snippet.language,
-          "code snippet",
-          ...snippet.tags,
-        ],
+        title,
+        description,
+        keywords: [title, snippet.language, "code snippet", ...tags],
         category: "technology",
-        authors: [{ name: snippet.author }],
+        authors: [{ name: author }],
         openGraph: {
-          title: `${snippet.title} — ${siteConfig.name}`,
-          description:
-            snippet.description || `Code snippet in ${snippet.language}`,
+          title: `${title} — ${siteConfig.name}`,
+          description,
           url: `${siteConfig.url}/s/${id}`,
           siteName: siteConfig.name,
           locale: "id_ID",
           type: "article",
-          authors: [snippet.author],
-          tags: snippet.tags,
+          authors: [author],
+          tags,
           publishedTime: snippet.createdAt,
           modifiedTime: snippet.updatedAt,
+          images: [
+            {
+              url: ogImage,
+              width: 1200,
+              height: 630,
+              alt: `${title} — code snippet preview`,
+            },
+          ],
         },
         twitter: {
           card: "summary_large_image",
-          title: `${snippet.title} — ${siteConfig.name}`,
-          description:
-            snippet.description || `Code snippet in ${snippet.language}`,
+          title: `${title} — ${siteConfig.name}`,
+          description,
+          images: [ogImage],
         },
         alternates: {
           canonical: `${siteConfig.url}/s/${id}`,
