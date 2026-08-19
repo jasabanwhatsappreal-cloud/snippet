@@ -58,7 +58,7 @@ export async function GET(
   const api = new URL(PIKWY_API);
   api.searchParams.set("tkn", "125");
   api.searchParams.set("rt", "jweb");
-  api.searchParams.set("u", `${siteConfig.url}/s/${id}`);
+  api.searchParams.set("u", `${siteConfig.url}/og/${id}`);
   api.searchParams.set("w", "1200");
   api.searchParams.set("h", "630");
   api.searchParams.set("f", "png");
