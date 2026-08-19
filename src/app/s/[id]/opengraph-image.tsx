@@ -11,10 +11,26 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const revalidate = 3600;
 
-const MAX_CODE_LINES = 12;
-const MAX_LINE_LENGTH = 88;
-const CODE_FONT_SIZE = 15;
-const CODE_LINE_HEIGHT = 24;
+// ---- code window metrics ----
+const CODE_FONT_SIZE = 13;
+const CODE_LINE_HEIGHT = 21;
+const CODE_V_PAD = 12;
+const TAB_HEIGHT = 34;
+const MAX_LINE_LENGTH = 120;
+
+// ---- chrome metrics ----
+const PAD_X = 40;
+const PAD_Y = 32;
+const HEADER_HEIGHT = 16;
+const TITLE_LINE_HEIGHT = 34;
+const META_HEIGHT = 16;
+const GAP_HEADER = 12;
+const GAP_TITLE = 6;
+const GAP_META = 18;
+
+const LINE_NUM_WIDTH = 44;
+const LINE_NUM_PAD_RIGHT = 12;
+const CODE_PAD_RIGHT = 16;
 
 interface Token {
   content: string;
@@ -79,17 +95,21 @@ function truncateLine(line: Token[], max = MAX_LINE_LENGTH): Token[] {
   return out;
 }
 
-async function getTokens(code: string, language: string): Promise<Token[][]> {
+async function getTokens(
+  code: string,
+  language: string,
+  maxLines: number
+): Promise<Token[][]> {
   try {
     const res = await codeToTokens(code, {
       lang: language as BundledLanguage,
       theme: "dark-plus",
     });
-    return res.tokens.slice(0, MAX_CODE_LINES).map(truncateLine);
+    return res.tokens.slice(0, maxLines).map(truncateLine);
   } catch {
     return code
       .split("\n")
-      .slice(0, MAX_CODE_LINES)
+      .slice(0, maxLines)
       .map((content) => [{ content, color: "#d4d4d4" }]);
   }
 }
@@ -113,7 +133,25 @@ export default async function Image({
   const lineCount = code.split("\n").length;
   const langColor = getLanguageColor(language);
   const host = siteConfig.url.replace(/^https?:\/\//, "");
-  const tokens = await getTokens(code, language);
+
+  // Exact pixel budget so the code window is sized to fit every rendered line
+  // and never clips the last one.
+  const contentHeight = size.height - PAD_Y * 2;
+  const chromeHeight =
+    HEADER_HEIGHT +
+    GAP_HEADER +
+    TITLE_LINE_HEIGHT +
+    GAP_TITLE +
+    META_HEIGHT +
+    GAP_META;
+  const codeBoxHeight = contentHeight - chromeHeight;
+  const codeAreaHeight = codeBoxHeight - TAB_HEIGHT - 2; // 2px = box border
+  const maxLines = Math.max(
+    1,
+    Math.floor((codeAreaHeight - CODE_V_PAD * 2) / CODE_LINE_HEIGHT)
+  );
+  const tokens = await getTokens(code, language, maxLines);
+  const codeAreaUsed = tokens.length * CODE_LINE_HEIGHT + CODE_V_PAD * 2;
 
   return new ImageResponse(
     (
@@ -124,7 +162,7 @@ export default async function Image({
           display: "flex",
           flexDirection: "column",
           backgroundColor: "#09090b",
-          padding: "40px 48px",
+          padding: `${PAD_Y}px ${PAD_X}px`,
           color: "#fafafa",
           fontFamily: "Mono",
         }}
@@ -134,43 +172,46 @@ export default async function Image({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: 20,
+            height: HEADER_HEIGHT,
+            marginBottom: GAP_HEADER,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <span
-              style={{ width: 12, height: 12, borderRadius: 999, backgroundColor: langColor }}
+              style={{ width: 10, height: 10, borderRadius: 999, backgroundColor: langColor }}
             />
-            <span style={{ fontSize: 15, color: "#a1a1aa" }}>{siteConfig.name}</span>
+            <span style={{ fontSize: 14, color: "#a1a1aa" }}>{siteConfig.name}</span>
           </div>
-          <span style={{ fontSize: 13, color: "#52525b" }}>{host}</span>
+          <span style={{ fontSize: 12, color: "#52525b" }}>{host}</span>
         </div>
 
         <div
           style={{
-            fontSize: 34,
+            fontSize: 28,
             fontWeight: 700,
-            lineHeight: 1.2,
-            marginBottom: 10,
+            height: TITLE_LINE_HEIGHT,
+            lineHeight: `${TITLE_LINE_HEIGHT}px`,
+            marginBottom: GAP_TITLE,
             color: "#fafafa",
           }}
         >
-          {truncateText(title, 60)}
+          {truncateText(title, 64)}
         </div>
 
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 12,
-            fontSize: 16,
+            gap: 10,
+            height: META_HEIGHT,
+            fontSize: 14,
             color: "#a1a1aa",
-            marginBottom: 24,
+            marginBottom: GAP_META,
           }}
         >
-          <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
             <span
-              style={{ width: 9, height: 9, borderRadius: 999, backgroundColor: langColor }}
+              style={{ width: 8, height: 8, borderRadius: 999, backgroundColor: langColor }}
             />
             <span style={{ color: "#e4e4e7" }}>{capitalize(language)}</span>
           </span>
@@ -184,7 +225,7 @@ export default async function Image({
           style={{
             display: "flex",
             flexDirection: "column",
-            flex: 1,
+            height: codeBoxHeight,
             backgroundColor: "#1e1e1e",
             border: "1px solid #2b2b2b",
             borderRadius: 12,
@@ -196,6 +237,7 @@ export default async function Image({
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              height: TAB_HEIGHT,
               backgroundColor: "#252526",
               borderBottom: "1px solid #1e1e1e",
             }}
@@ -204,16 +246,16 @@ export default async function Image({
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 10,
-                height: 38,
-                padding: "0 16px",
+                gap: 9,
+                height: TAB_HEIGHT,
+                padding: "0 14px",
                 backgroundColor: "#1e1e1e",
                 borderRight: "1px solid #252526",
               }}
             >
-              <span style={{ width: 11, height: 11, borderRadius: 3, backgroundColor: langColor }} />
-              <span style={{ fontSize: 14, color: "#cccccc" }}>{capitalize(language)}</span>
-              <span style={{ fontSize: 12, color: "#6e6e6e" }}>{tokens.length}L</span>
+              <span style={{ width: 10, height: 10, borderRadius: 3, backgroundColor: langColor }} />
+              <span style={{ fontSize: 13, color: "#cccccc" }}>{capitalize(language)}</span>
+              <span style={{ fontSize: 11, color: "#6e6e6e" }}>{tokens.length}L</span>
             </div>
             <span style={{ fontSize: 11, color: "#6e6e6e", paddingRight: 14, letterSpacing: 1 }}>
               CODE
@@ -223,9 +265,9 @@ export default async function Image({
           <div
             style={{
               display: "flex",
-              flex: 1,
               flexDirection: "column",
-              padding: "12px 0",
+              height: codeAreaUsed,
+              padding: `${CODE_V_PAD}px 0`,
               fontFamily: "Mono",
               fontSize: CODE_FONT_SIZE,
               lineHeight: `${CODE_LINE_HEIGHT}px`,
@@ -237,15 +279,15 @@ export default async function Image({
                 style={{
                   display: "flex",
                   whiteSpace: "pre",
-                  minHeight: CODE_LINE_HEIGHT,
+                  height: CODE_LINE_HEIGHT,
                 }}
               >
                 <span
                   style={{
-                    width: 52,
+                    width: LINE_NUM_WIDTH,
                     flexShrink: 0,
                     textAlign: "right",
-                    paddingRight: 14,
+                    paddingRight: LINE_NUM_PAD_RIGHT,
                     color: "#6e6e6e",
                     fontSize: 12,
                     lineHeight: `${CODE_LINE_HEIGHT}px`,
@@ -256,7 +298,7 @@ export default async function Image({
                 <span
                   style={{
                     color: "#d4d4d4",
-                    paddingRight: 16,
+                    paddingRight: CODE_PAD_RIGHT,
                     whiteSpace: "pre",
                   }}
                 >
