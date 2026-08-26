@@ -11,6 +11,7 @@ import {
   Plus,
   LogOut,
   BarChart3,
+  Globe,
 } from "lucide-react";
 import { SnippetCard } from "@/components/snippet/card";
 import { SnippetCardSkeleton } from "@/components/ui/skeleton";
@@ -108,6 +109,13 @@ export default function AdminDashboardPage() {
           >
             <BarChart3 className="w-4 h-4" />
             Requests
+          </Link>
+          <Link
+            href="/admin/ips"
+            className="flex items-center gap-2 px-4 py-2 border-2 border-border bg-surface text-sm text-text font-bold hover:bg-yellow shadow-[3px_3px_0_#1a1a1a] hover:shadow-[1px_1px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+          >
+            <Globe className="w-4 h-4" />
+            IPs
           </Link>
           <Link
             href="/create"
