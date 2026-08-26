@@ -42,7 +42,7 @@ export function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
         scrolled
-          ? "bg-background/80 backdrop-blur-xl border-b border-border"
+          ? "bg-surface/95 backdrop-blur-sm border-b-2 border-border"
           : "bg-transparent"
       }`}
     >
@@ -50,8 +50,8 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2 group">
-              <Code2 className="w-7 h-7 text-accent group-hover:scale-110 transition-transform" />
-              <span className="text-lg font-bold tracking-tight text-text">
+              <Code2 className="w-7 h-7 text-accent group-hover:rotate-12 transition-transform" />
+              <span className="text-lg font-extrabold tracking-tight text-text">
                 Phrzy
               </span>
             </Link>
@@ -64,10 +64,10 @@ export function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-2 px-3 py-2 border-2 text-sm font-bold transition-all ${
                       isActive
-                        ? "bg-accent/10 text-accent"
-                        : "text-muted hover:text-text hover:bg-surface-hover"
+                        ? "bg-accent text-white border-border shadow-[2px_2px_0_#1a1a1a]"
+                        : "bg-surface text-text border-transparent hover:border-border hover:shadow-[2px_2px_0_#1a1a1a]"
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -81,14 +81,14 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/admin"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-muted hover:text-text hover:bg-surface-hover transition-colors"
+              className="flex items-center gap-2 px-3 py-2 border-2 border-transparent text-sm font-bold text-text hover:border-border hover:bg-surface hover:shadow-[2px_2px_0_#1a1a1a] transition-all"
             >
               <LayoutDashboard className="w-4 h-4" />
             </Link>
             {isAdmin && (
               <Link
                 href="/create"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-accent hover:bg-accent-hover text-white transition-colors"
+                className="flex items-center gap-2 px-4 py-2 border-2 border-border bg-accent text-white text-sm font-bold shadow-[3px_3px_0_#1a1a1a] hover:shadow-[1px_1px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
               >
                 <Plus className="w-4 h-4" />
                 New Snippet
@@ -97,8 +97,9 @@ export function Navbar() {
           </div>
 
           <button
+            type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 rounded-lg text-muted hover:text-text hover:bg-surface-hover transition-colors"
+            className="md:hidden p-3 min-w-[44px] min-h-[44px] flex items-center justify-center border-2 border-border bg-surface shadow-[2px_2px_0_#1a1a1a] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-shadow"
           >
             {mobileOpen ? (
               <X className="w-5 h-5" />
@@ -110,7 +111,7 @@ export function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden border-t border-border bg-surface/95 backdrop-blur-xl animate-slide-in">
+        <div className="md:hidden border-t-2 border-border bg-surface animate-slide-in">
           <div className="px-4 py-3 space-y-1">
             {navLinks.map((link) => {
               const Icon = link.icon;
@@ -120,10 +121,10 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-3 px-3 py-2.5 border-2 text-sm font-bold transition-all ${
                     isActive
-                      ? "bg-accent/10 text-accent"
-                      : "text-muted hover:text-text hover:bg-surface-hover"
+                      ? "bg-accent text-white border-border shadow-[2px_2px_0_#1a1a1a]"
+                      : "text-text border-transparent hover:border-border hover:bg-surface-hover hover:shadow-[2px_2px_0_#1a1a1a]"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -134,7 +135,7 @@ export function Navbar() {
             <Link
               href="/admin"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted hover:text-text hover:bg-surface-hover transition-colors"
+              className="flex items-center gap-3 px-3 py-2.5 border-2 border-transparent text-sm font-bold text-text hover:border-border hover:bg-surface-hover hover:shadow-[2px_2px_0_#1a1a1a] transition-all"
             >
               <LayoutDashboard className="w-4 h-4" />
               Admin

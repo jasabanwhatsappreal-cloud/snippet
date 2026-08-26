@@ -46,17 +46,17 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className="animate-slide-in flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-surface shadow-lg max-w-sm"
+            className="animate-slide-in flex items-center gap-3 px-4 py-3 border-2 border-border bg-surface shadow-[4px_4px_0_#1a1a1a] max-w-sm"
           >
             {t.type === "success" ? (
               <CheckCircle className="w-5 h-5 text-success shrink-0" />
             ) : (
               <XCircle className="w-5 h-5 text-error shrink-0" />
             )}
-            <span className="text-sm text-text">{t.message}</span>
+            <span className="text-sm font-medium text-text">{t.message}</span>
             <button
               onClick={() => dismiss(t.id)}
-              className="ml-auto text-muted hover:text-text"
+              className="ml-auto text-muted hover:text-text p-1 hover:bg-surface-hover border-2 border-transparent hover:border-border transition-all"
             >
               <X className="w-4 h-4" />
             </button>

@@ -48,12 +48,12 @@ export default function AdminAnalyticsPage() {
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <div className="h-8 w-48 bg-surface-hover rounded animate-pulse mb-8" />
+        <div className="h-8 w-48 bg-surface-hover border-2 border-border animate-pulse mb-8" />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="bg-surface border border-border rounded-xl p-6 h-32 animate-pulse"
+              className="bg-surface border-2 border-border p-6 h-32 animate-pulse shadow-[3px_3px_0_#1a1a1a]"
             />
           ))}
         </div>
@@ -88,57 +88,59 @@ export default function AdminAnalyticsPage() {
       <div className="flex items-center gap-4 mb-8">
         <Link
           href="/admin"
-          className="flex items-center gap-1.5 text-sm text-muted hover:text-text transition-colors"
+          className="flex items-center gap-1.5 text-sm text-muted font-bold hover:text-text hover:underline transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Dashboard
         </Link>
-        <h1 className="text-2xl font-bold text-text">Analytics</h1>
+        <h1 className="text-2xl font-extrabold text-text">Analytics</h1>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         {[
-          { label: "Total Views", value: stats.totalViews, icon: Eye, color: "text-blue-400" },
-          { label: "Views Today", value: viewsToday, icon: TrendingUp, color: "text-green-400" },
-          { label: "Total Likes", value: stats.totalLikes, icon: Heart, color: "text-pink-400" },
-          { label: "Snippets", value: stats.totalSnippets, icon: FileCode, color: "text-accent" },
+          { label: "Total Views", value: stats.totalViews, icon: Eye, bg: "bg-blue" },
+          { label: "Views Today", value: viewsToday, icon: TrendingUp, bg: "bg-green" },
+          { label: "Total Likes", value: stats.totalLikes, icon: Heart, bg: "bg-pink" },
+          { label: "Snippets", value: stats.totalSnippets, icon: FileCode, bg: "bg-accent" },
         ].map((stat) => {
           const Icon = stat.icon;
           return (
             <div
               key={stat.label}
-              className="bg-surface border border-border rounded-xl p-5"
+              className="bg-surface border-2 border-border p-5 shadow-[3px_3px_0_#1a1a1a]"
             >
-              <Icon className={`w-5 h-5 ${stat.color} mb-2`} />
-              <div className="text-2xl font-bold text-text">
+              <div className={`w-8 h-8 ${stat.bg} border-2 border-border flex items-center justify-center mb-2`}>
+                <Icon className="w-4 h-4 text-white" />
+              </div>
+              <div className="text-2xl font-extrabold text-text">
                 {stat.value.toLocaleString()}
               </div>
-              <div className="text-xs text-muted mt-1">{stat.label}</div>
+              <div className="text-xs text-muted mt-1 font-bold">{stat.label}</div>
             </div>
           );
         })}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-surface border border-border rounded-xl p-6">
-          <h3 className="text-sm font-semibold text-text mb-4">
+        <div className="bg-surface border-2 border-border p-6 shadow-[4px_4px_0_#1a1a1a]">
+          <h3 className="text-sm font-extrabold text-text mb-4">
             Popular Snippets
           </h3>
           {popularSnippets.length === 0 ? (
-            <p className="text-sm text-muted">No data yet</p>
+            <p className="text-sm text-muted font-medium">No data yet</p>
           ) : (
             <div className="space-y-3">
               {popularSnippets.map((snippet, i) => (
                 <div
                   key={snippet.id}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-hover transition-colors"
+                  className="flex items-center gap-3 p-2 hover:bg-yellow transition-colors"
                 >
-                  <span className="text-xs text-muted w-5">{i + 1}</span>
+                  <span className="text-xs text-muted font-bold w-5">{i + 1}</span>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-text truncate">
+                    <div className="text-sm font-bold text-text truncate">
                       {snippet.title}
                     </div>
-                    <div className="text-xs text-muted">
+                    <div className="text-xs text-muted font-medium">
                       {snippet.views} views &middot; {snippet.likes} likes
                     </div>
                   </div>
@@ -154,12 +156,12 @@ export default function AdminAnalyticsPage() {
           )}
         </div>
 
-        <div className="bg-surface border border-border rounded-xl p-6">
-          <h3 className="text-sm font-semibold text-text mb-4">
+        <div className="bg-surface border-2 border-border p-6 shadow-[4px_4px_0_#1a1a1a]">
+          <h3 className="text-sm font-extrabold text-text mb-4">
             Popular Languages
           </h3>
           {popularLanguages.length === 0 ? (
-            <p className="text-sm text-muted">No data yet</p>
+            <p className="text-sm text-muted font-medium">No data yet</p>
           ) : (
             <div className="space-y-3">
               {popularLanguages.map(([lang, count]) => {
@@ -175,15 +177,15 @@ export default function AdminAnalyticsPage() {
                             backgroundColor: getLanguageColor(lang),
                           }}
                         />
-                        <span className="text-sm text-text capitalize">
+                        <span className="text-sm font-bold text-text capitalize">
                           {lang}
                         </span>
                       </div>
-                      <span className="text-xs text-muted">{count} snippets</span>
+                      <span className="text-xs text-muted font-medium">{count} snippets</span>
                     </div>
-                    <div className="w-full h-1.5 bg-surface-hover rounded-full overflow-hidden">
+                    <div className="w-full h-3 bg-surface-hover border-2 border-border overflow-hidden">
                       <div
-                        className="h-full bg-accent rounded-full transition-all"
+                        className="h-full bg-accent"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>

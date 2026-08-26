@@ -87,19 +87,19 @@ export default function AdminRequestsPage() {
         <div className="flex items-center gap-4">
           <Link
             href="/admin"
-            className="flex items-center gap-1.5 text-sm text-muted hover:text-text transition-colors"
+            className="flex items-center gap-1.5 text-sm text-muted font-bold hover:text-text hover:underline transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Dashboard
           </Link>
-          <h1 className="text-2xl font-bold text-text">Snippet Requests</h1>
+          <h1 className="text-2xl font-extrabold text-text">Snippet Requests</h1>
         </div>
         {!loading && (
           <span
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 border-2 border-border text-xs font-bold ${
               pending > 0
-                ? "bg-warning/10 text-warning border-warning/20"
-                : "bg-success/10 text-success border-success/20"
+                ? "bg-yellow text-text"
+                : "bg-green text-text"
             }`}
           >
             <Clock className="w-3.5 h-3.5" />
@@ -113,15 +113,15 @@ export default function AdminRequestsPage() {
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="bg-surface border border-border rounded-xl p-4 h-24 animate-pulse"
+              className="bg-surface border-2 border-border p-4 h-24 animate-pulse shadow-[3px_3px_0_#1a1a1a]"
             />
           ))}
         </div>
       ) : requests.length === 0 ? (
-        <div className="bg-surface border border-border rounded-xl p-12 text-center">
+        <div className="bg-surface border-2 border-border p-12 text-center shadow-[4px_4px_0_#1a1a1a]">
           <MessageSquare className="w-12 h-12 text-muted mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-text mb-2">Belum ada request</h3>
-          <p className="text-sm text-muted">
+          <h3 className="text-lg font-extrabold text-text mb-2">Belum ada request</h3>
+          <p className="text-sm text-muted font-medium">
             Request snippet dari pengunjung akan muncul di sini.
           </p>
         </div>
@@ -130,16 +130,16 @@ export default function AdminRequestsPage() {
           {requests.map((request) => (
             <div
               key={request.id}
-              className="bg-surface border border-border rounded-xl p-5"
+              className="bg-surface border-2 border-border p-5 shadow-[3px_3px_0_#1a1a1a]"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <h3 className="text-sm font-semibold text-text">
+                    <h3 className="text-sm font-extrabold text-text">
                       {request.title}
                     </h3>
                     {request.language && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs border border-border text-muted">
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 border-2 border-border text-xs font-bold text-text">
                         <span
                           className="w-2 h-2 rounded-full"
                           style={{
@@ -150,25 +150,25 @@ export default function AdminRequestsPage() {
                       </span>
                     )}
                     <span
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 border-2 border-border text-xs font-bold ${
                         request.status === "resolved"
-                          ? "bg-success/10 text-success border border-success/20"
-                          : "bg-warning/10 text-warning border border-warning/20"
+                          ? "bg-green text-text"
+                          : "bg-yellow text-text"
                       }`}
                     >
                       {request.status === "resolved" ? "Selesai" : "Pending"}
                     </span>
                   </div>
-                  <p className="text-sm text-muted mb-3 whitespace-pre-wrap">
+                  <p className="text-sm text-muted mb-3 whitespace-pre-wrap font-medium">
                     {request.description}
                   </p>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted/70">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted font-medium">
                     <span>{request.requester || "Anonymous"}</span>
                     {request.contact && (
                       <span className="break-all">{request.contact}</span>
                     )}
                     <span>{formatDate(request.createdAt)}</span>
-                    <span className="font-mono text-muted/40">{request.id}</span>
+                    <span className="font-mono text-muted/60">{request.id}</span>
                   </div>
                 </div>
 
@@ -176,7 +176,7 @@ export default function AdminRequestsPage() {
                   {request.status === "pending" ? (
                     <button
                       onClick={() => handleStatus(request.id, "resolved")}
-                      className="p-2 rounded-lg text-success hover:bg-success/10 transition-colors"
+                      className="p-2 border-2 border-transparent hover:border-border text-success hover:bg-green/10 transition-all"
                       title="Tandai selesai"
                     >
                       <CheckCircle2 className="w-4 h-4" />
@@ -184,7 +184,7 @@ export default function AdminRequestsPage() {
                   ) : (
                     <button
                       onClick={() => handleStatus(request.id, "pending")}
-                      className="p-2 rounded-lg text-warning hover:bg-warning/10 transition-colors"
+                      className="p-2 border-2 border-transparent hover:border-border text-warning hover:bg-yellow/30 transition-all"
                       title="Buka kembali"
                     >
                       <RotateCcw className="w-4 h-4" />
@@ -192,7 +192,7 @@ export default function AdminRequestsPage() {
                   )}
                   <button
                     onClick={() => setDeleteModal(request.id)}
-                    className="p-2 rounded-lg text-muted hover:text-error hover:bg-error/10 transition-colors"
+                    className="p-2 border-2 border-transparent hover:border-border text-muted hover:text-error hover:bg-error/10 transition-all"
                     title="Hapus"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -209,19 +209,19 @@ export default function AdminRequestsPage() {
         onClose={() => setDeleteModal(null)}
         title="Hapus Request"
       >
-        <p className="text-sm text-muted mb-6">
+        <p className="text-sm text-muted mb-6 font-medium">
           Yakin ingin menghapus request ini? Aksi ini tidak bisa dibatalkan.
         </p>
         <div className="flex justify-end gap-2">
           <button
             onClick={() => setDeleteModal(null)}
-            className="px-4 py-2 rounded-lg border border-border text-sm text-muted hover:text-text hover:bg-surface-hover transition-colors"
+            className="px-4 py-2 border-2 border-border bg-surface text-sm text-text font-bold hover:bg-yellow shadow-[2px_2px_0_#1a1a1a] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             Batal
           </button>
           <button
             onClick={() => deleteModal && handleDelete(deleteModal)}
-            className="px-4 py-2 rounded-lg bg-error hover:bg-error/80 text-white text-sm font-medium transition-colors"
+            className="px-4 py-2 bg-error border-2 border-border text-white text-sm font-bold shadow-[2px_2px_0_#1a1a1a] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             Hapus
           </button>

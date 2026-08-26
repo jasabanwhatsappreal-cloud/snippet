@@ -95,7 +95,7 @@ export default function SnippetDetailPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-4 w-96" />
-        <Skeleton className="h-[400px] w-full rounded-xl" />
+        <Skeleton className="h-[400px] w-full" />
       </div>
     );
   }
@@ -103,13 +103,13 @@ export default function SnippetDetailPage() {
   if (error || !snippet) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-20 text-center">
-        <h1 className="text-2xl font-bold text-text mb-4">Snippet Not Found</h1>
-        <p className="text-muted mb-6">
+        <h1 className="text-2xl font-extrabold text-text mb-4">Snippet Not Found</h1>
+        <p className="text-muted mb-6 font-medium">
           The snippet you&apos;re looking for doesn&apos;t exist or has been removed.
         </p>
         <Link
           href="/snippets"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-accent border-2 border-border text-white text-sm font-bold shadow-[3px_3px_0_#1a1a1a] hover:shadow-[1px_1px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
           Browse Snippets
@@ -123,7 +123,7 @@ export default function SnippetDetailPage() {
       <div className="mb-6">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-1.5 text-sm text-muted hover:text-text transition-colors mb-4"
+          className="flex items-center gap-1.5 text-sm text-muted font-bold hover:text-text hover:underline transition-colors mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -131,13 +131,13 @@ export default function SnippetDetailPage() {
 
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-text mb-2">
+            <h1 className="text-2xl font-extrabold text-text mb-2">
               {snippet.title}
             </h1>
             {snippet.description && (
-              <p className="text-sm text-muted mb-3">{snippet.description}</p>
+              <p className="text-sm text-muted mb-3 font-medium">{snippet.description}</p>
             )}
-            <div className="flex flex-wrap items-center gap-3 text-xs text-muted">
+            <div className="flex flex-wrap items-center gap-3 text-xs text-muted font-medium">
               <span className="flex items-center gap-1">
                 <User className="w-3.5 h-3.5" />
                 {snippet.author}
@@ -164,17 +164,17 @@ export default function SnippetDetailPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={handleCopyCode}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border text-sm text-muted hover:text-text hover:bg-surface-hover transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 border-2 border-border bg-surface text-sm text-text font-bold hover:bg-yellow shadow-[2px_2px_0_#1a1a1a] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               <Copy className="w-4 h-4" />
               Copy
             </button>
             <button
               onClick={handleDownload}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border text-sm text-muted hover:text-text hover:bg-surface-hover transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 border-2 border-border bg-surface text-sm text-text font-bold hover:bg-yellow shadow-[2px_2px_0_#1a1a1a] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               <Download className="w-4 h-4" />
               Download
@@ -183,14 +183,14 @@ export default function SnippetDetailPage() {
               href={`/s/${id}/raw`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border text-sm text-muted hover:text-text hover:bg-surface-hover transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 border-2 border-border bg-surface text-sm text-text font-bold hover:bg-yellow shadow-[2px_2px_0_#1a1a1a] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               <ExternalLink className="w-4 h-4" />
               Raw
             </a>
             <button
               onClick={handleCopyLink}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border text-sm text-muted hover:text-text hover:bg-surface-hover transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 border-2 border-border bg-surface text-sm text-text font-bold hover:bg-yellow shadow-[2px_2px_0_#1a1a1a] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               <ExternalLink className="w-4 h-4" />
               Share
@@ -198,13 +198,13 @@ export default function SnippetDetailPage() {
             <button
               onClick={handleLike}
               disabled={liked}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-2 border-2 border-border text-sm font-bold transition-all ${
                 liked
-                  ? "bg-accent/10 border-accent/30 text-accent"
-                  : "border-border text-muted hover:text-accent hover:border-accent/30 hover:bg-accent/10"
+                  ? "bg-accent text-white shadow-[2px_2px_0_#1a1a1a]"
+                  : "bg-surface text-text hover:bg-yellow shadow-[2px_2px_0_#1a1a1a] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
               }`}
             >
-              <Heart className={`w-4 h-4 ${liked ? "fill-accent" : ""}`} />
+              <Heart className={`w-4 h-4 ${liked ? "fill-white" : ""}`} />
               {snippet.likes}
             </button>
           </div>
@@ -217,7 +217,7 @@ export default function SnippetDetailPage() {
               <Link
                 key={tag}
                 href={`/snippets?search=${encodeURIComponent(tag)}`}
-                className="px-2.5 py-1 text-xs rounded-full bg-accent/10 text-accent border border-accent/20 hover:bg-accent/20 transition-colors"
+                className="px-2.5 py-1 text-xs font-bold border-2 border-border bg-yellow hover:bg-accent hover:text-white transition-colors"
               >
                 {tag}
               </Link>
@@ -229,23 +229,23 @@ export default function SnippetDetailPage() {
       <CodeViewer code={snippet.code} language={snippet.language} />
 
       <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-surface border border-border rounded-xl p-3 text-center">
-          <div className="text-xs text-muted mb-1">Language</div>
-          <div className="text-sm font-medium text-text capitalize">
+        <div className="bg-surface border-2 border-border p-3 text-center shadow-[3px_3px_0_#1a1a1a]">
+          <div className="text-xs text-muted mb-1 font-bold">Language</div>
+          <div className="text-sm font-extrabold text-text capitalize">
             {snippet.language}
           </div>
         </div>
-        <div className="bg-surface border border-border rounded-xl p-3 text-center">
-          <div className="text-xs text-muted mb-1">Views</div>
-          <div className="text-sm font-medium text-text">{snippet.views}</div>
+        <div className="bg-surface border-2 border-border p-3 text-center shadow-[3px_3px_0_#1a1a1a]">
+          <div className="text-xs text-muted mb-1 font-bold">Views</div>
+          <div className="text-sm font-extrabold text-text">{snippet.views}</div>
         </div>
-        <div className="bg-surface border border-border rounded-xl p-3 text-center">
-          <div className="text-xs text-muted mb-1">Likes</div>
-          <div className="text-sm font-medium text-text">{snippet.likes}</div>
+        <div className="bg-surface border-2 border-border p-3 text-center shadow-[3px_3px_0_#1a1a1a]">
+          <div className="text-xs text-muted mb-1 font-bold">Likes</div>
+          <div className="text-sm font-extrabold text-text">{snippet.likes}</div>
         </div>
-        <div className="bg-surface border border-border rounded-xl p-3 text-center">
-          <div className="text-xs text-muted mb-1">Created</div>
-          <div className="text-sm font-medium text-text">
+        <div className="bg-surface border-2 border-border p-3 text-center shadow-[3px_3px_0_#1a1a1a]">
+          <div className="text-xs text-muted mb-1 font-bold">Created</div>
+          <div className="text-sm font-extrabold text-text">
             {formatDate(snippet.createdAt)}
           </div>
         </div>

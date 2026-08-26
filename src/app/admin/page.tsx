@@ -70,9 +70,9 @@ export default function AdminDashboardPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="bg-surface border border-border rounded-xl p-5">
-              <div className="h-4 w-24 bg-surface-hover rounded animate-pulse mb-2" />
-              <div className="h-8 w-16 bg-surface-hover rounded animate-pulse" />
+            <div key={i} className="bg-surface border-2 border-border p-5 shadow-[3px_3px_0_#1a1a1a]">
+              <div className="h-4 w-24 bg-surface-hover border-2 border-border animate-pulse mb-2" />
+              <div className="h-8 w-16 bg-surface-hover border-2 border-border animate-pulse" />
             </div>
           ))}
         </div>
@@ -98,27 +98,27 @@ export default function AdminDashboardPage() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-text">Admin Dashboard</h1>
-          <p className="text-sm text-muted mt-1">Manage your snippets</p>
+          <h1 className="text-2xl font-extrabold text-text">Admin Dashboard</h1>
+          <p className="text-sm text-muted mt-1 font-medium">Manage your snippets</p>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href="/admin/requests"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm text-muted hover:text-text hover:bg-surface-hover transition-colors"
+            className="flex items-center gap-2 px-4 py-2 border-2 border-border bg-surface text-sm text-text font-bold hover:bg-yellow shadow-[3px_3px_0_#1a1a1a] hover:shadow-[1px_1px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             <BarChart3 className="w-4 h-4" />
             Requests
           </Link>
           <Link
             href="/create"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-accent border-2 border-border text-white text-sm font-bold shadow-[3px_3px_0_#1a1a1a] hover:shadow-[1px_1px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             <Plus className="w-4 h-4" />
             New Snippet
           </Link>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm text-muted hover:text-text hover:bg-surface-hover transition-colors"
+            className="flex items-center gap-2 px-4 py-2 border-2 border-border bg-surface text-sm text-text font-bold hover:bg-yellow shadow-[3px_3px_0_#1a1a1a] hover:shadow-[1px_1px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             <LogOut className="w-4 h-4" />
             Logout
@@ -128,49 +128,51 @@ export default function AdminDashboardPage() {
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         {[
-          { label: "Total Snippets", value: stats.totalSnippets, icon: FileCode, color: "text-accent" },
-          { label: "Total Views", value: stats.totalViews, icon: Eye, color: "text-blue-400" },
-          { label: "Total Likes", value: stats.totalLikes, icon: Heart, color: "text-pink-400" },
-          { label: "Languages", value: stats.languages, icon: Code2, color: "text-green-400" },
+          { label: "Total Snippets", value: stats.totalSnippets, icon: FileCode, bg: "bg-accent" },
+          { label: "Total Views", value: stats.totalViews, icon: Eye, bg: "bg-blue" },
+          { label: "Total Likes", value: stats.totalLikes, icon: Heart, bg: "bg-pink" },
+          { label: "Languages", value: stats.languages, icon: Code2, bg: "bg-green" },
         ].map((stat) => {
           const Icon = stat.icon;
           return (
             <div
               key={stat.label}
-              className="bg-surface border border-border rounded-xl p-5"
+              className="bg-surface border-2 border-border p-5 shadow-[3px_3px_0_#1a1a1a]"
             >
-              <Icon className={`w-5 h-5 ${stat.color} mb-2`} />
-              <div className="text-2xl font-bold text-text">
+              <div className={`w-8 h-8 ${stat.bg} border-2 border-border flex items-center justify-center mb-2`}>
+                <Icon className="w-4 h-4 text-white" />
+              </div>
+              <div className="text-2xl font-extrabold text-text">
                 {stat.value.toLocaleString()}
               </div>
-              <div className="text-xs text-muted mt-1">{stat.label}</div>
+              <div className="text-xs text-muted mt-1 font-bold">{stat.label}</div>
             </div>
           );
         })}
       </div>
 
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-text">Recent Snippets</h2>
+        <h2 className="text-lg font-extrabold text-text">Recent Snippets</h2>
         <Link
           href="/admin/snippets"
-          className="text-sm text-accent hover:text-accent-hover transition-colors"
+          className="text-sm text-accent font-bold hover:underline transition-colors"
         >
           View all
         </Link>
       </div>
 
       {recentSnippets.length === 0 ? (
-        <div className="bg-surface border border-border rounded-xl p-12 text-center">
+        <div className="bg-surface border-2 border-border p-12 text-center shadow-[4px_4px_0_#1a1a1a]">
           <FileCode className="w-12 h-12 text-muted mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-text mb-2">
+          <h3 className="text-lg font-extrabold text-text mb-2">
             No snippets yet
           </h3>
-          <p className="text-sm text-muted mb-4">
+          <p className="text-sm text-muted mb-4 font-medium">
             Create your first snippet to get started.
           </p>
           <Link
             href="/create"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-accent border-2 border-border text-white text-sm font-bold shadow-[3px_3px_0_#1a1a1a] hover:shadow-[1px_1px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             <Plus className="w-4 h-4" />
             Create Snippet

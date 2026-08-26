@@ -47,7 +47,7 @@ export default function HomePage() {
       try {
         const [snippetsRes, statsRes, languagesRes] = await Promise.all([
           fetch("/api/snippets?per_page=6&sort=newest"),
-          fetch("/api/snippets?per_page=1"),
+          fetch("/api/stats"),
           fetch("/api/languages?limit=10"),
         ]);
 
@@ -67,7 +67,10 @@ export default function HomePage() {
         if (statsData.success) {
           setStats((prev) => ({
             ...prev,
-            totalSnippets: statsData.data.total,
+            totalSnippets: statsData.data.totalSnippets,
+            totalViews: statsData.data.totalViews,
+            languages: statsData.data.languages,
+            publicSnippets: statsData.data.totalSnippets,
           }));
         }
 
@@ -104,19 +107,18 @@ export default function HomePage() {
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent" />
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-16">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 border-2 border-border bg-yellow text-text text-xs font-bold mb-6 shadow-[2px_2px_0_#1a1a1a]">
               <Sparkles className="w-3.5 h-3.5" />
               Simple snippet sharing for developers
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4">
               {siteConfig.tagline}
             </h1>
 
-            <p className="text-lg text-muted mb-8 max-w-xl mx-auto">
+            <p className="text-lg text-muted mb-8 max-w-xl mx-auto font-medium">
               {siteConfig.subTagline}
             </p>
 
@@ -124,7 +126,7 @@ export default function HomePage() {
               {isAdmin && (
                 <Link
                   href="/create"
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-medium transition-colors"
+                  className="flex items-center gap-2 px-6 py-3 bg-accent border-2 border-border text-white font-bold shadow-[4px_4px_0_#1a1a1a] hover:shadow-[2px_2px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                 >
                   <Plus className="w-5 h-5" />
                   Create Snippet
@@ -132,7 +134,7 @@ export default function HomePage() {
               )}
               <Link
                 href="/snippets"
-                className="flex items-center gap-2 px-6 py-3 rounded-xl border border-border hover:border-border-light text-text font-medium transition-colors hover:bg-surface-hover"
+                className="flex items-center gap-2 px-6 py-3 border-2 border-border bg-surface text-text font-bold shadow-[4px_4px_0_#1a1a1a] hover:shadow-[2px_2px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-yellow transition-all"
               >
                 <Globe className="w-5 h-5" />
                 Explore Snippets
@@ -141,11 +143,11 @@ export default function HomePage() {
 
             <button
               onClick={() => setSearchOpen(true)}
-              className="w-full max-w-lg mx-auto flex items-center gap-3 px-5 py-3.5 rounded-xl border border-border bg-surface hover:border-border-light transition-colors group"
+              className="w-full max-w-lg mx-auto flex items-center gap-3 px-5 py-3.5 border-2 border-border bg-surface hover:bg-yellow transition-colors group shadow-[4px_4px_0_#1a1a1a]"
             >
               <Search className="w-5 h-5 text-muted group-hover:text-accent transition-colors" />
-              <span className="text-muted text-sm">Search snippets...</span>
-              <kbd className="hidden sm:inline-flex ml-auto px-2 py-0.5 text-[10px] font-mono text-muted bg-surface-hover rounded border border-border">
+              <span className="text-muted text-sm font-medium">Search snippets...</span>
+              <kbd className="hidden sm:inline-flex ml-auto px-2 py-0.5 text-[10px] font-mono font-bold text-muted bg-surface-hover border-2 border-border">
                 Ctrl + K
               </kbd>
             </button>
@@ -158,14 +160,14 @@ export default function HomePage() {
           href={siteConfig.whatsappChannel}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-5 py-4 rounded-xl border border-border bg-surface hover:border-border-light transition-colors"
+          className="group flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-5 py-4 border-2 border-border bg-surface shadow-[4px_4px_0_#1a1a1a] hover:shadow-[2px_2px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
         >
           <span className="flex items-center gap-3">
-            <span className="flex items-center justify-center w-10 h-10 rounded-full bg-accent/10 shrink-0">
-              <MessageCircle className="w-5 h-5 text-accent" />
+            <span className="flex items-center justify-center w-10 h-10 border-2 border-border bg-accent shrink-0">
+              <MessageCircle className="w-5 h-5 text-white" />
             </span>
             <span className="flex flex-col">
-              <span className="text-sm font-semibold text-text">
+              <span className="text-sm font-bold text-text">
                 Ikuti Channel WhatsApp Kami
               </span>
               <span className="text-xs text-muted">
@@ -173,7 +175,7 @@ export default function HomePage() {
               </span>
             </span>
           </span>
-          <span className="sm:ml-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent-hover transition-colors">
+          <span className="sm:ml-auto inline-flex items-center gap-1.5 px-4 py-2 bg-green border-2 border-border text-text text-sm font-bold shadow-[2px_2px_0_#1a1a1a]">
             Gabung Sekarang
             <ArrowRight className="w-4 h-4" />
           </span>
@@ -192,13 +194,13 @@ export default function HomePage() {
             return (
               <div
                 key={stat.label}
-                className="bg-surface border border-border rounded-xl p-4 text-center"
+                className="bg-surface border-2 border-border p-4 text-center shadow-[3px_3px_0_#1a1a1a]"
               >
                 <Icon className="w-5 h-5 text-accent mx-auto mb-2" />
-                <div className="text-2xl font-bold text-text">
+                <div className="text-2xl font-extrabold text-text">
                   {stat.value.toLocaleString()}
                 </div>
-                <div className="text-xs text-muted mt-1">{stat.label}</div>
+                <div className="text-xs text-muted mt-1 font-medium">{stat.label}</div>
               </div>
             );
           })}
@@ -207,10 +209,10 @@ export default function HomePage() {
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-text">Recently Added</h2>
+          <h2 className="text-xl font-extrabold text-text">Recently Added</h2>
           <Link
             href="/snippets"
-            className="flex items-center gap-1 text-sm text-accent hover:text-accent-hover transition-colors"
+            className="flex items-center gap-1 text-sm text-accent font-bold hover:underline transition-colors"
           >
             View all
             <ArrowRight className="w-4 h-4" />
@@ -224,12 +226,12 @@ export default function HomePage() {
             ))}
           </div>
         ) : recentSnippets.length === 0 ? (
-          <div className="bg-surface border border-border rounded-xl p-12 text-center">
+          <div className="bg-surface border-2 border-border p-12 text-center shadow-[4px_4px_0_#1a1a1a]">
             <FileCode className="w-12 h-12 text-muted mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-text mb-2">
+            <h3 className="text-lg font-extrabold text-text mb-2">
               No snippets yet
             </h3>
-            <p className="text-sm text-muted mb-4">
+            <p className="text-sm text-muted mb-4 font-medium">
               {isAdmin
                 ? "Be the first to create a snippet."
                 : "No snippets have been created yet."}
@@ -237,7 +239,7 @@ export default function HomePage() {
             {isAdmin && (
               <Link
                 href="/create"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-accent border-2 border-border text-white text-sm font-bold shadow-[3px_3px_0_#1a1a1a] hover:shadow-[1px_1px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
               >
                 <Plus className="w-4 h-4" />
                 Create Snippet
@@ -254,20 +256,20 @@ export default function HomePage() {
       </section>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
-        <h2 className="text-xl font-bold text-text mb-6">Popular Languages</h2>
+        <h2 className="text-xl font-extrabold text-text mb-6">Popular Languages</h2>
         {popularLanguages.length === 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             {siteConfig.languages.map((lang) => (
               <Link
                 key={lang}
                 href={`/snippets?language=${lang}`}
-                className="flex items-center gap-3 p-3 rounded-xl bg-surface border border-border hover:border-border-light hover:bg-surface-hover transition-all group"
+                className="flex items-center gap-3 p-3 border-2 border-border bg-surface hover:bg-yellow hover:shadow-[3px_3px_0_#1a1a1a] transition-all group"
               >
                 <div
                   className="w-3 h-3 rounded-full shrink-0"
                   style={{ backgroundColor: getLanguageColor(lang) }}
                 />
-                <span className="text-sm font-medium text-muted group-hover:text-text transition-colors capitalize">
+                <span className="text-sm font-bold text-text capitalize">
                   {lang}
                 </span>
               </Link>
@@ -279,16 +281,16 @@ export default function HomePage() {
               <Link
                 key={language}
                 href={`/snippets?language=${language}`}
-                className="flex items-center gap-3 p-3 rounded-xl bg-surface border border-border hover:border-border-light hover:bg-surface-hover transition-all group"
+                className="flex items-center gap-3 p-3 border-2 border-border bg-surface hover:bg-yellow hover:shadow-[3px_3px_0_#1a1a1a] transition-all group"
               >
                 <div
                   className="w-3 h-3 rounded-full shrink-0"
                   style={{ backgroundColor: getLanguageColor(language) }}
                 />
-                <span className="text-sm font-medium text-muted group-hover:text-text transition-colors capitalize">
+                <span className="text-sm font-bold text-text capitalize">
                   {language}
                 </span>
-                <span className="ml-auto text-xs text-muted/60 group-hover:text-muted transition-colors">
+                <span className="ml-auto text-xs text-muted font-medium">
                   {count}
                 </span>
               </Link>

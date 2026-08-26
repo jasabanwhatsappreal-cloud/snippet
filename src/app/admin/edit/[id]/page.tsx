@@ -61,7 +61,7 @@ export default function EditSnippetPage() {
   if (isAdmin === null || loading) {
     return (
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-20 text-center">
-        <div className="w-6 h-6 border-2 border-accent/30 border-t-accent rounded-full animate-spin mx-auto" />
+        <div className="w-6 h-6 border-2 border-border border-t-accent animate-spin mx-auto" />
       </div>
     );
   }
@@ -70,11 +70,11 @@ export default function EditSnippetPage() {
     return (
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-20 text-center">
         <Lock className="w-12 h-12 text-muted mx-auto mb-4" />
-        <h1 className="text-2xl font-bold text-text mb-2">Access Restricted</h1>
-        <p className="text-sm text-muted mb-6">Only admin can edit snippets.</p>
+        <h1 className="text-2xl font-extrabold text-text mb-2">Access Restricted</h1>
+        <p className="text-sm text-muted mb-6 font-medium">Only admin can edit snippets.</p>
         <button
           onClick={() => router.push("/admin/login")}
-          className="px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors"
+          className="px-4 py-2 border-2 border-border bg-accent text-white text-sm font-bold shadow-[3px_3px_0_#1a1a1a] hover:shadow-[1px_1px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
         >
           Admin Login
         </button>
@@ -85,13 +85,13 @@ export default function EditSnippetPage() {
   if (notFound) {
     return (
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-20 text-center">
-        <h1 className="text-2xl font-bold text-text mb-4">Snippet Not Found</h1>
-        <p className="text-sm text-muted mb-6">
+        <h1 className="text-2xl font-extrabold text-text mb-4">Snippet Not Found</h1>
+        <p className="text-sm text-muted mb-6 font-medium">
           The snippet you&apos;re trying to edit doesn&apos;t exist.
         </p>
         <button
           onClick={() => router.push("/admin/snippets")}
-          className="px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors"
+          className="px-4 py-2 border-2 border-border bg-accent text-white text-sm font-bold shadow-[3px_3px_0_#1a1a1a] hover:shadow-[1px_1px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
         >
           Back to Manage Snippets
         </button>
@@ -99,14 +99,34 @@ export default function EditSnippetPage() {
     );
   }
 
-  const handleAddTag = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault();
-      const tag = tagInput.trim().toLowerCase();
-      if (tag && !tags.includes(tag) && tags.length < 10) {
-        setTags([...tags, tag]);
-        setTagInput("");
+  const handleAddTagFromValue = (value: string) => {
+    const tag = value.trim().toLowerCase();
+    if (tag && !tags.includes(tag) && tags.length < 10) {
+      setTags([...tags, tag]);
+      setTagInput("");
+    }
+  };
+
+  const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (val.includes(",")) {
+      const parts = val.split(",");
+      for (const part of parts.slice(0, -1)) {
+        const tag = part.trim().toLowerCase();
+        if (tag && !tags.includes(tag) && tags.length < 10) {
+          setTags((prev) => [...prev, tag]);
+        }
       }
+      setTagInput(parts[parts.length - 1]);
+    } else {
+      setTagInput(val);
+    }
+  };
+
+  const handleAddTag = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === "Go" || e.key === "Next" || e.key === "Done") {
+      e.preventDefault();
+      handleAddTagFromValue(tagInput);
     }
   };
 
@@ -159,57 +179,57 @@ export default function EditSnippetPage() {
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
       <button
         onClick={() => router.back()}
-        className="flex items-center gap-1.5 text-sm text-muted hover:text-text transition-colors mb-6"
+        className="flex items-center gap-1.5 text-sm text-muted font-bold hover:text-text hover:underline transition-colors mb-6"
       >
         <ArrowLeft className="w-4 h-4" />
         Back
       </button>
 
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text mb-2">Edit Snippet</h1>
-        <p className="text-sm text-muted">
+        <h1 className="text-2xl font-extrabold text-text mb-2">Edit Snippet</h1>
+        <p className="text-sm text-muted font-medium">
           Update the snippet details and save your changes.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
-          <div className="p-3 rounded-lg bg-error/10 border border-error/20 text-error text-sm">
+          <div className="p-3 border-2 border-border bg-error/10 text-error text-sm font-bold shadow-[3px_3px_0_#1a1a1a]">
             {error}
           </div>
         )}
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text">Title *</label>
+          <label className="text-sm font-extrabold text-text">Title *</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. React Button Component"
             maxLength={100}
-            className="w-full px-4 py-2.5 rounded-xl bg-surface border border-border text-sm text-text placeholder:text-muted outline-none focus:border-accent transition-colors"
+            className="w-full px-4 py-2.5 border-2 border-border bg-surface text-sm text-text font-medium placeholder:text-muted outline-none focus:border-accent transition-colors shadow-[3px_3px_0_#1a1a1a] focus:shadow-[1px_1px_0_#1a1a1a] focus:translate-x-[2px] focus:translate-y-[2px]"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text">Description</label>
+          <label className="text-sm font-extrabold text-text">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="A short description of your snippet"
             rows={2}
             maxLength={500}
-            className="w-full px-4 py-2.5 rounded-xl bg-surface border border-border text-sm text-text placeholder:text-muted outline-none focus:border-accent transition-colors resize-none"
+            className="w-full px-4 py-2.5 border-2 border-border bg-surface text-sm text-text font-medium placeholder:text-muted outline-none focus:border-accent transition-colors resize-none shadow-[3px_3px_0_#1a1a1a] focus:shadow-[1px_1px_0_#1a1a1a] focus:translate-x-[2px] focus:translate-y-[2px]"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-text">Language *</label>
+            <label className="text-sm font-extrabold text-text">Language *</label>
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-surface border border-border text-sm text-text outline-none focus:border-accent transition-colors"
+              className="w-full px-4 py-2.5 border-2 border-border bg-surface text-sm text-text font-medium outline-none focus:border-accent transition-colors shadow-[3px_3px_0_#1a1a1a]"
             >
               {siteConfig.languages.map((lang) => (
                 <option key={lang} value={lang}>
@@ -220,13 +240,13 @@ export default function EditSnippetPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-text">Visibility</label>
+            <label className="text-sm font-extrabold text-text">Visibility</label>
             <select
               value={visibility}
               onChange={(e) =>
                 setVisibility(e.target.value as "public" | "private")
               }
-              className="w-full px-4 py-2.5 rounded-xl bg-surface border border-border text-sm text-text outline-none focus:border-accent transition-colors"
+              className="w-full px-4 py-2.5 border-2 border-border bg-surface text-sm text-text font-medium outline-none focus:border-accent transition-colors shadow-[3px_3px_0_#1a1a1a]"
             >
               <option value="public">Public</option>
               <option value="private">Private</option>
@@ -235,25 +255,25 @@ export default function EditSnippetPage() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text">Author</label>
+          <label className="text-sm font-extrabold text-text">Author</label>
           <input
             type="text"
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
             placeholder="Anonymous"
-            className="w-full px-4 py-2.5 rounded-xl bg-surface border border-border text-sm text-text placeholder:text-muted outline-none focus:border-accent transition-colors"
+            className="w-full px-4 py-2.5 border-2 border-border bg-surface text-sm text-text font-medium placeholder:text-muted outline-none focus:border-accent transition-colors shadow-[3px_3px_0_#1a1a1a] focus:shadow-[1px_1px_0_#1a1a1a] focus:translate-x-[2px] focus:translate-y-[2px]"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text">
-            Tags <span className="text-muted font-normal">(press Enter to add)</span>
+          <label className="text-sm font-extrabold text-text">
+            Tags <span className="text-muted font-normal">(type comma or Enter to add)</span>
           </label>
           <div className="flex flex-wrap gap-2 mb-2">
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent/10 text-accent text-xs border border-accent/20"
+                className="inline-flex items-center gap-1 px-2.5 py-1 border-2 border-border bg-yellow text-accent text-xs font-bold"
               >
                 {tag}
                 <button
@@ -269,22 +289,22 @@ export default function EditSnippetPage() {
           <input
             type="text"
             value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
+            onChange={handleTagInputChange}
             onKeyDown={handleAddTag}
             placeholder="e.g. react, component"
             disabled={tags.length >= 10}
-            className="w-full px-4 py-2.5 rounded-xl bg-surface border border-border text-sm text-text placeholder:text-muted outline-none focus:border-accent transition-colors disabled:opacity-50"
+            className="w-full px-4 py-2.5 border-2 border-border bg-surface text-sm text-text font-medium placeholder:text-muted outline-none focus:border-accent transition-colors disabled:opacity-50 shadow-[3px_3px_0_#1a1a1a] focus:shadow-[1px_1px_0_#1a1a1a] focus:translate-x-[2px] focus:translate-y-[2px]"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-text">Code *</label>
+          <label className="text-sm font-extrabold text-text">Code *</label>
           <textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder={`function hello() {\n  console.log("Hello Phrzy!");\n}`}
             rows={16}
-            className="w-full px-4 py-3 rounded-xl bg-surface border border-border text-sm text-text placeholder:text-muted outline-none focus:border-accent transition-colors resize-y font-mono"
+            className="w-full px-4 py-3 border-2 border-border bg-surface text-sm text-text font-medium placeholder:text-muted outline-none focus:border-accent transition-colors resize-y font-mono shadow-[3px_3px_0_#1a1a1a] focus:shadow-[1px_1px_0_#1a1a1a] focus:translate-x-[2px] focus:translate-y-[2px]"
             style={{ fontFamily: "var(--font-geist-mono), monospace" }}
           />
         </div>
@@ -292,7 +312,7 @@ export default function EditSnippetPage() {
         <button
           type="submit"
           disabled={saving}
-          className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent hover:bg-accent-hover text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-accent border-2 border-border text-white font-bold shadow-[4px_4px_0_#1a1a1a] hover:shadow-[2px_2px_0_#1a1a1a] hover:translate-x-[2px] hover:translate-y-[2px] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-[4px_4px_0_#1a1a1a] disabled:hover:translate-x-0 disabled:hover:translate-y-0 transition-all"
         >
           {saving ? (
             <>

@@ -49,9 +49,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/thumbnail.jpeg",
-        width: 1600,
-        height: 901,
+        url: `${siteConfig.url}/api/og/home`,
+        width: 1200,
+        height: 630,
         alt: siteConfig.name,
       },
     ],
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: ["/thumbnail.jpeg"],
+    images: [`${siteConfig.url}/api/og/home`],
   },
   robots: {
     index: true,
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#09090b",
+  themeColor: "#f5f5f0",
 };
 
 export default function RootLayout({
@@ -88,7 +88,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">
         <ToastProvider>
@@ -124,7 +124,7 @@ export default function RootLayout({
                   "@id": `${siteConfig.url}/#organization`,
                   name: siteConfig.name,
                   url: siteConfig.url,
-                  logo: `${siteConfig.url}/thumbnail.jpeg`,
+                  logo: `${siteConfig.url}/api/og/home`,
                 },
               ],
             }),

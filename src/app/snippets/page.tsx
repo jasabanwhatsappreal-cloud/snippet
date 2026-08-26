@@ -88,8 +88,8 @@ function SnippetsContent() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-text mb-2">Explore Snippets</h1>
-          <p className="text-sm text-muted">Browse and discover code snippets</p>
+          <h1 className="text-2xl font-extrabold text-text mb-2">Explore Snippets</h1>
+          <p className="text-sm text-muted font-medium">Browse and discover code snippets</p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -100,14 +100,14 @@ function SnippetsContent() {
               value={localSearch}
               onChange={(e) => setLocalSearch(e.target.value)}
               placeholder="Search snippets..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface border border-border text-sm text-text placeholder:text-muted outline-none focus:border-accent transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 border-2 border-border bg-surface text-sm text-text font-medium placeholder:text-muted outline-none focus:border-accent transition-colors shadow-[3px_3px_0_#1a1a1a] focus:shadow-[1px_1px_0_#1a1a1a] focus:translate-x-[2px] focus:translate-y-[2px]"
             />
           </form>
 
           <select
             value={language}
             onChange={(e) => updateParams("language", e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-surface border border-border text-sm text-text outline-none focus:border-accent transition-colors"
+            className="px-3 py-2.5 border-2 border-border bg-surface text-sm text-text font-medium outline-none focus:border-accent transition-colors shadow-[3px_3px_0_#1a1a1a]"
           >
             <option value="">All Languages</option>
             {siteConfig.languages.map((lang) => (
@@ -120,7 +120,7 @@ function SnippetsContent() {
           <select
             value={sort}
             onChange={(e) => updateParams("sort", e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-surface border border-border text-sm text-text outline-none focus:border-accent transition-colors"
+            className="px-3 py-2.5 border-2 border-border bg-surface text-sm text-text font-medium outline-none focus:border-accent transition-colors shadow-[3px_3px_0_#1a1a1a]"
           >
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
@@ -130,7 +130,7 @@ function SnippetsContent() {
         </div>
 
         {!loading && total > 0 && (
-          <p className="text-xs text-muted mb-4">
+          <p className="text-xs text-muted mb-4 font-medium">
             {total} snippet{total !== 1 ? "s" : ""} found
           </p>
         )}
@@ -142,12 +142,12 @@ function SnippetsContent() {
             ))}
           </div>
         ) : snippets.length === 0 ? (
-          <div className="bg-surface border border-border rounded-xl p-12 text-center">
+          <div className="bg-surface border-2 border-border p-12 text-center shadow-[4px_4px_0_#1a1a1a]">
             <Search className="w-12 h-12 text-muted mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-text mb-2">
+            <h3 className="text-lg font-extrabold text-text mb-2">
               No snippets found
             </h3>
-            <p className="text-sm text-muted">
+            <p className="text-sm text-muted font-medium">
               Try adjusting your search or filters.
             </p>
           </div>
@@ -164,7 +164,7 @@ function SnippetsContent() {
             <button
               onClick={() => updateParams("page", (page - 1).toString())}
               disabled={page <= 1}
-              className="p-2 rounded-lg border border-border text-muted hover:text-text hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="p-2 border-2 border-border bg-surface text-muted hover:text-text hover:bg-yellow disabled:opacity-30 disabled:cursor-not-allowed shadow-[3px_3px_0_#1a1a1a] disabled:shadow-none transition-all"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -174,10 +174,10 @@ function SnippetsContent() {
                 <button
                   key={pageNum}
                   onClick={() => updateParams("page", pageNum.toString())}
-                  className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
+                  className={`w-8 h-8 text-sm font-bold border-2 border-border transition-all ${
                     page === pageNum
-                      ? "bg-accent text-white"
-                      : "border border-border text-muted hover:text-text hover:bg-surface-hover"
+                      ? "bg-accent text-white shadow-[3px_3px_0_#1a1a1a]"
+                      : "bg-surface text-muted hover:text-text hover:bg-yellow shadow-[3px_3px_0_#1a1a1a]"
                   }`}
                 >
                   {pageNum}
@@ -187,7 +187,7 @@ function SnippetsContent() {
             <button
               onClick={() => updateParams("page", (page + 1).toString())}
               disabled={page >= totalPages}
-              className="p-2 rounded-lg border border-border text-muted hover:text-text hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="p-2 border-2 border-border bg-surface text-muted hover:text-text hover:bg-yellow disabled:opacity-30 disabled:cursor-not-allowed shadow-[3px_3px_0_#1a1a1a] disabled:shadow-none transition-all"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -204,8 +204,8 @@ export default function SnippetsPage() {
       fallback={
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
           <div className="mb-8">
-            <div className="h-8 w-48 bg-surface-hover rounded animate-pulse mb-2" />
-            <div className="h-4 w-64 bg-surface-hover rounded animate-pulse" />
+            <div className="h-8 w-48 bg-surface-hover border-2 border-border animate-pulse mb-2" />
+            <div className="h-4 w-64 bg-surface-hover border-2 border-border animate-pulse" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
