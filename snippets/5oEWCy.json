@@ -1,14 +1,16 @@
 {
   "id": "5oEWCy",
-  "title": "pikwy.js",
+  "title": "Screenshot Website ( pikwy.com )",
   "description": "scraper Node.js untuk mengambil screenshot dari website menggunakan layanan Pikwy. Mendukung format JPG, PNG, dan PDF dengan pengaturan ukuran layar, scale, zoom, fullscreen, serta delay sebelum halaman di-capture. Cukup masukkan URL target melalui terminal, lalu scraper akan mengembalikan hasil screenshot dalam bentuk data JSON.",
   "language": "javascript",
   "code": "/*\n- base : https://pikwy.com\n- creator : phrzy\n- channel : https://whatsapp.com/channel/0029VbD1zGq6mYPUbtVh6U0L/121\n*/\n\nconst headers = {\n  'accept': 'application/json',\n  'user-agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36'\n}\n\nasync function screenshot(url, opts = {}) {\n  const {\n    format = 'jpg',\n    width = 1280,\n    height = 1200,\n    scale = 100,\n    zoom = 100,\n    fullSize = false,\n    delay = 3000\n  } = opts\n\n  const params = new URLSearchParams()\n  params.set('u', encodeURIComponent(url))\n  params.set('tkn', '125')\n  params.set('d', delay)\n  params.set('fs', fullSize ? 1 : 0)\n  params.set('w', width)\n  params.set('h', height)\n  params.set('s', scale)\n  params.set('z', zoom)\n  params.set('f', String(format).replace(/^\\./, ''))\n  params.set('rt', 'jweb')\n\n  try {\n    const res = await fetch('https://api.pikwy.com/?' + params.toString(), { headers })\n    const data = await res.json()\n    if (data.code) {\n      return { status: false, message: data.mesg }\n    }\n    return data\n  } catch (error) {\n    return {\n      status: false,\n      message: error.message\n    }\n  }\n}\n\nconst usage = `Usage: node pikwy.js <url> [format]\n\nOptions:\n  format  jpg (default) | png | pdf\n\nExample:\n  node pikwy.js https://example.com\n  node pikwy.js https://example.com pdf\n`\n\nasync function main() {\n  const url = process.argv[2]\n  const format = process.argv[3]\n\n  if (!url) {\n    console.log(usage)\n    return\n  }\n\n  const data = await screenshot(url, { format })\n  console.log(JSON.stringify(data, null, 2))\n}\n\nmain()",
   "author": "phrzy",
-  "tags": [],
+  "tags": [
+    "tools"
+  ],
   "visibility": "public",
   "createdAt": "2026-08-19T05:09:15.262Z",
-  "updatedAt": "2026-08-19T05:09:15.262Z",
+  "updatedAt": "2026-08-26T02:00:45.052Z",
   "views": 86,
   "likes": 1
 }
